@@ -7,7 +7,7 @@ import { FiFlag, FiMapPin, FiMoreHorizontal, FiUsers } from "react-icons/fi";
 import { MdRecordVoiceOver } from "react-icons/md";
 
 import background from "@assets/images/background.jpg";
-import logoWhite from "@assets/images/logo-white.svg";
+import logoWhite from "@assets/images/logo.png";
 
 import ToastBox from "@components/ToastBox/ToastBox";
 import ReportFacilityModal from "@components/Facility/ReportFacilityModal";

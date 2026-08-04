@@ -7,7 +7,7 @@ import { useLogin } from "@hooks/useLogin.hook";
 import { useLoginFormValidation } from "@hooks/formValidations/loginFormValidation.schema";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import { AiOutlineWarning } from "react-icons/ai";
-import logo from "@assets/images/logo-white.svg";
+import logo from "@assets/images/logo.png";
 
 import Input from "@components/Input/Input";
 import Button from "@components/Button/Button";
@@ -74,7 +74,7 @@ export default function Login() {
       <div className="hidden lg:block login-image w-6/12 h-screen bg-blend-darken bg-black bg-opacity-70 relative">
         <Link href="/">
           <a className="absolute top-10 left-[10%] ">
-            <Image src={logo} alt="reporta-health-logo" />
+            <Image src={logo} alt="reporta-health-logo" width={123} height={37} />
           </a>
         </Link>
       </div>
