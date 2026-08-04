@@ -14,6 +14,7 @@ import ReportFacilityModal from "@components/Facility/ReportFacilityModal";
 
 import { useFetchNearestFacilities } from "@hooks/useFetchNearestFacility.hook";
 import useGetLocation from "@hooks/useGetLocation.hook";
+import useRequireAuth from "@hooks/useRequireAuth.hook";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -46,6 +47,7 @@ const Landing = () => {
 
   const { data, isLoading } = useFetchNearestFacilities();
   const location = useGetLocation();
+  const requireAuth = useRequireAuth();
 
   const fetchFacility = () => {
     if (data !== undefined) {
@@ -128,7 +130,7 @@ const Landing = () => {
 
           <button
             type="button"
-            onClick={() => setShowReportModal(true)}
+            onClick={() => requireAuth(() => setShowReportModal(true))}
             className="flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm text-white shadow-sm transition duration-300 hover:bg-primary/90"
           >
             <FiFlag className="text-base" />

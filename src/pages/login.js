@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { useLogin } from "@hooks/useLogin.hook";
@@ -15,6 +16,16 @@ import { ToastContainer, toast } from "react-toastify";
 
 
 export default function Login() {
+  const router = useRouter();
+
+  // page the user was on before they were sent here to log in
+  const redirectTo =
+    typeof router.query.redirect === "string" &&
+    router.query.redirect.startsWith("/") &&
+    !router.query.redirect.startsWith("//")
+      ? router.query.redirect
+      : "/";
+
   // dialogue box function to log out users
   const [showDialogue, setShowDialogue] = useState(false);
   const confirmOkay = () => {
@@ -31,7 +42,7 @@ export default function Login() {
         toast.success('You are welcome', {
           icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#242F9B" ><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M9.999 13.587 7.7 11.292l-1.412 1.416 3.713 3.705 6.706-6.706-1.414-1.414z"></path></svg>
         })
-        window.location.replace("/")
+        window.location.replace(redirectTo)
       },
       onError: () => {
         toast.error("Sorry, we couldn't find an account with that user details, please check if yor details are correct and try again")
