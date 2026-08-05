@@ -344,6 +344,7 @@ const Header = () => {
                 &nbsp; &nbsp; Statistics
               </a>
             </Link>
+            {isAuthenticated && (
             <Link href="/profile">
               <a
                 className={
@@ -405,6 +406,7 @@ const Header = () => {
                 &nbsp; &nbsp; Profile
               </a>
             </Link>
+            )}
           </div>
 
           <div className="w-full mb-[4rem]">
