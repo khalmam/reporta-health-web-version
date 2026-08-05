@@ -1,25 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { FiFlag, FiMapPin, FiUsers } from "react-icons/fi";
+import { FiFlag, FiMapPin, FiMoreHorizontal, FiUsers } from "react-icons/fi";
 import { MdRecordVoiceOver } from "react-icons/md";
 
 import background from "@assets/images/background.jpg";
-import logoWhite from "@assets/images/logo-white.svg";
+import logoWhite from "@assets/images/logo.png";
 
 import ToastBox from "@components/ToastBox/ToastBox";
 import ReportFacilityModal from "@components/Facility/ReportFacilityModal";
 
 import { useFetchNearestFacilities } from "@hooks/useFetchNearestFacility.hook";
 import useGetLocation from "@hooks/useGetLocation.hook";
+import useRequireAuth from "@hooks/useRequireAuth.hook";
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Statistics", href: "/statistics" },
 ];
+
+// the logo already links home, so the mobile menu leaves Home out
+const mobileNavLinks = navLinks.filter((link) => link.href !== "/");
 
 const features = [
   {
@@ -43,9 +47,11 @@ const Landing = () => {
   const router = useRouter();
   const [showDialogue, setShowDialogue] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { data, isLoading } = useFetchNearestFacilities();
   const location = useGetLocation();
+  const requireAuth = useRequireAuth();
 
   const fetchFacility = () => {
     if (data !== undefined) {
@@ -53,6 +59,22 @@ const Landing = () => {
     } else {
       setShowDialogue(true);
     }
+  };
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const closeOnEscape = (e) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
+  const openReportModal = () => {
+    setMenuOpen(false);
+    requireAuth(() => setShowReportModal(true));
   };
 
   const ShowMyLocation = (e) => {
@@ -94,7 +116,7 @@ const Landing = () => {
       {/* content */}
       <div className="relative z-10 flex min-h-screen flex-col px-6 lg:px-10">
         {/* nav */}
-        <nav className="flex items-center justify-between py-6">
+        <nav className="relative flex items-center justify-between py-6">
           <Link href="/">
             <a className="relative block h-10 w-[150px]">
               <Image
@@ -128,12 +150,61 @@ const Landing = () => {
 
           <button
             type="button"
-            onClick={() => setShowReportModal(true)}
-            className="flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm text-white shadow-sm transition duration-300 hover:bg-primary/90"
+            onClick={openReportModal}
+            className="hidden items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm text-white shadow-sm transition duration-300 hover:bg-primary/90 lg:flex"
           >
             <FiFlag className="text-base" />
             Report A Facility
           </button>
+
+          {/* mobile menu */}
+          <div className="relative lg:hidden">
+            <button
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-haspopup="true"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="relative z-20 flex h-10 w-10 items-center justify-center rounded-md text-white transition duration-300 hover:bg-white/10"
+            >
+              <FiMoreHorizontal className="text-xl" />
+            </button>
+
+            {menuOpen && (
+              <>
+                {/* click-away catcher */}
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setMenuOpen(false)}
+                />
+
+                <div className="absolute right-0 top-full z-20 mt-2 w-48 overflow-hidden rounded-lg bg-white py-2 shadow-xl">
+                  {mobileNavLinks.map((link) => (
+                    <Link key={link.href} href={link.href}>
+                      <a
+                        onClick={() => setMenuOpen(false)}
+                        className={`block px-5 py-3 text-center text-sm transition hover:bg-black/5 ${
+                          router.pathname === link.href
+                            ? "font-semibold text-primary"
+                            : "text-[#0B1C36]"
+                        }`}
+                      >
+                        {link.label}
+                      </a>
+                    </Link>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={openReportModal}
+                    className="block w-full px-5 py-3 text-center text-sm text-[#0B1C36] transition hover:bg-black/5"
+                  >
+                    Report a Facility
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </nav>
 
         {/* hero */}
