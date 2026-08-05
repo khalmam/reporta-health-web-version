@@ -1,18 +1,40 @@
+import React, { useEffect, useState } from "react";
 import Layout from "@components/Layout/Layout";
 import Image from "next/image";
 import PropTypes from "prop-types";
+import { useRouter } from "next/router";
 import avatar from "@assets/images/health-worker.svg";
 import Input from "@components/Input/Input";
 import { useUserCredentialsStore } from "@store/authStore.store";
 
 export default function Profile() {
+  const router = useRouter();
 
-  console.log(useUserCredentialsStore());
+  // the auth store is persisted and only settles on the client, so the check
+  // runs in an effect — rendering nothing until then keeps the first client
+  // render identical to the exported markup
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const authed = useUserCredentialsStore.getState().isAuthenticated;
+
+    setIsAuthenticated(authed);
+    setAuthChecked(true);
+
+    if (!authed) {
+      router.replace("/login?redirect=/profile");
+    }
+  }, [router]);
+
   const firstName = useUserCredentialsStore()?.userDetails?.user?.firstName
   const lastName = useUserCredentialsStore()?.userDetails?.user?.LastName
   const email = useUserCredentialsStore()?.userDetails?.user?.username
   const phone = useUserCredentialsStore()?.userDetails?.user?.phone
   const address = useUserCredentialsStore()?.userDetails?.user?.address
+
+  if (!authChecked || !isAuthenticated) return null;
+
   return (
     <div className="w-full relative overflow-hidden select-none  z-2">
       <Layout
