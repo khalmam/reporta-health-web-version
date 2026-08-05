@@ -2,6 +2,7 @@ import { MapContext } from "@context/mapContext";
 import React, { useContext, useState } from "react";
 import StarRatings from "./StarRatings";
 import useGetLocation from "@hooks/useGetLocation.hook";
+import useRequireAuth from "@hooks/useRequireAuth.hook";
 
 export default function PopupInfo({
   facility,
@@ -11,6 +12,7 @@ export default function PopupInfo({
   const { setSelectedDirection } = useContext(MapContext);
 
   const location = useGetLocation();
+  const requireAuth = useRequireAuth();
 
   const handleGetDirection = () => {
     window.open(
@@ -127,7 +129,7 @@ export default function PopupInfo({
         </div>
         <div className="w-full grid grid-cols-2 items-center justify-items-between py-6">
           <button
-            onClick={() => showReportModal()}
+            onClick={() => requireAuth(() => showReportModal())}
             className="text-danger font-bold w-fit text-[90%] underline"
           >
             Report facility

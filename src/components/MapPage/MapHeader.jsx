@@ -342,6 +342,7 @@ const MapHeader = (props) => {
                 &nbsp; &nbsp; Statistics
               </a>
             </Link>
+            {isAuthenticated && (
             <Link href="/profile">
               <a
                 className={
@@ -403,6 +404,7 @@ const MapHeader = (props) => {
                 &nbsp; &nbsp; Profile
               </a>
             </Link>
+            )}
           </div>
 
           <div className="w-full mb-[4rem]">

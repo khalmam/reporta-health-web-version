@@ -6,7 +6,7 @@ import { useUserSignupFormValidation } from "@hooks/formValidations/userSignupFo
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import { AiOutlineWarning } from "react-icons/ai";
 
-import logo from "@assets/images/logo-white.svg";
+import logo from "@assets/images/logo.png";
 import { ToastContainer, toast } from "react-toastify";
 
 import Input from "@components/Input/Input";
@@ -45,7 +45,7 @@ export default function Signup() {
       <div className="hidden lg:block login-image w-6/12 h-screen bg-blend-darken bg-black bg-opacity-70 relative">
         <Link href="/">
           <a className="absolute top-10 left-[10%] ">
-            <Image src={logo} alt="reporta-health-logo" />
+            <Image src={logo} alt="reporta-health-logo" width={123} height={37} />
           </a>
         </Link>
       </div>
